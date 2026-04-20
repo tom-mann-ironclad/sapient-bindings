@@ -1,0 +1,61 @@
+Metadata-Version: 2.4
+Name: sapient-py
+Version: 0.1.0
+Summary: Python protobuf bindings and framing helpers for SAPIENT / BSI Flex 335
+Author-email: Tom Mann <tom.mann@ironclad-software.com>
+License-Expression: MIT OR Apache-2.0
+Project-URL: Repository, https://github.com/tom-mann-ironclad/sapient-bindings
+Keywords: sapient,protobuf,bsi,bindings
+Classifier: Development Status :: 3 - Alpha
+Classifier: Intended Audience :: Developers
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3 :: Only
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Classifier: Programming Language :: Python :: 3.12
+Classifier: Programming Language :: Python :: 3.13
+Classifier: Topic :: Software Development :: Libraries
+Requires-Python: >=3.10
+Description-Content-Type: text/markdown
+License-File: LICENSE-MIT
+License-File: LICENSE-APACHE
+Requires-Dist: protobuf<6,>=5.28.0
+Dynamic: license-file
+
+# sapient-py
+
+Python protobuf bindings and framing helpers for SAPIENT / BSI Flex 335.
+
+This package ships checked-in Python modules generated from the SAPIENT schema
+source and a small framing helper layer for stream transport.
+
+The generated modules live under `sapient_msg`, while the framing helpers live
+under `sapient_py`.
+
+## Usage
+
+```python
+from sapient_msg.bsi_flex_335_v2_0 import sapient_message_pb2
+from sapient_py.framing import encode_frame, decode_frame
+
+message = sapient_message_pb2.SapientMessage()
+message.node_id = "550e8400-e29b-41d4-a716-446655440000"
+
+frame = encode_frame(message)
+decoded = decode_frame(frame, sapient_message_pb2.SapientMessage)
+```
+
+## Framing
+
+The framing convention matches the Rust crate:
+
+- 4-byte unsigned little-endian payload length
+- followed by the protobuf-encoded `SapientMessage` bytes
+
+## Licensing
+
+This package is licensed under either MIT or Apache-2.0, at your option.
+
+The SAPIENT `.proto` schema source from which these bindings were generated is
+derived from the DSTL SAPIENT-Proto-Files repository and is separately
+attributed to DSTL under Apache License 2.0.

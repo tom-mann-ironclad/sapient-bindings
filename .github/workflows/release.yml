@@ -1,0 +1,138 @@
+name: Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      package:
+        description: "Package to publish"
+        required: true
+        default: rust
+        type: choice
+        options:
+          - rust
+          - python
+      version:
+        description: "Package version to publish, for example 0.1.0"
+        required: true
+        type: string
+  push:
+    tags:
+      - "rust-sapient-rs-v*"
+      - "python-sapient-py-v*"
+
+jobs:
+  publish-rust:
+    name: Publish Rust crate
+    if: startsWith(github.ref, 'refs/tags/rust-sapient-rs-v') || (github.event_name == 'workflow_dispatch' && inputs.package == 'rust')
+    runs-on: ubuntu-latest
+    concurrency:
+      group: release-rust-${{ github.ref_name || github.run_id }}
+      cancel-in-progress: false
+    environment:
+      name: crates-io
+    permissions:
+      contents: read
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Install protoc
+        run: sudo apt-get update && sudo apt-get install --yes protobuf-compiler
+
+      - name: Verify generated bindings are up to date
+        run: |
+          ./scripts/regenerate-bindings.sh
+          git diff --exit-code
+
+      - name: Verify Rust release version
+        shell: bash
+        run: |
+          manifest_version="$(sed -n 's/^version = "\(.*\)"/\1/p' rust/sapient-rs/Cargo.toml | head -n1)"
+          if [ -z "$manifest_version" ]; then
+            echo "Failed to read Rust package version from Cargo.toml" >&2
+            exit 1
+          fi
+
+          if [ "${GITHUB_EVENT_NAME}" = "push" ]; then
+            expected_version="${GITHUB_REF_NAME#rust-sapient-rs-v}"
+          else
+            expected_version="${{ inputs.version }}"
+          fi
+
+          if [ "$manifest_version" != "$expected_version" ]; then
+            echo "Rust package version mismatch: manifest=$manifest_version expected=$expected_version" >&2
+            exit 1
+          fi
+
+      - name: Publish sapient-rs
+        env:
+          CARGO_REGISTRY_TOKEN: ${{ secrets.CARGO_REGISTRY_TOKEN }}
+        run: cargo publish -p sapient-rs
+
+  publish-python:
+    name: Publish Python package
+    if: startsWith(github.ref, 'refs/tags/python-sapient-py-v') || (github.event_name == 'workflow_dispatch' && inputs.package == 'python')
+    runs-on: ubuntu-latest
+    concurrency:
+      group: release-python-${{ github.ref_name || github.run_id }}
+      cancel-in-progress: false
+    environment:
+      name: pypi
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install protoc
+        run: sudo apt-get update && sudo apt-get install --yes protobuf-compiler
+
+      - name: Install Python packaging tools
+        run: python -m pip install --upgrade pip build twine protobuf
+
+      - name: Verify generated bindings are up to date
+        run: |
+          ./scripts/regenerate-bindings.sh
+          git diff --exit-code
+
+      - name: Verify Python release version
+        shell: bash
+        run: |
+          manifest_version="$(sed -n 's/^version = "\(.*\)"/\1/p' python/sapient-py/pyproject.toml | head -n1)"
+          if [ -z "$manifest_version" ]; then
+            echo "Failed to read Python package version from pyproject.toml" >&2
+            exit 1
+          fi
+
+          if [ "${GITHUB_EVENT_NAME}" = "push" ]; then
+            expected_version="${GITHUB_REF_NAME#python-sapient-py-v}"
+          else
+            expected_version="${{ inputs.version }}"
+          fi
+
+          if [ "$manifest_version" != "$expected_version" ]; then
+            echo "Python package version mismatch: manifest=$manifest_version expected=$expected_version" >&2
+            exit 1
+          fi
+
+      - name: Build Python package
+        run: ./scripts/build-python-package.sh
+
+      - name: Check Python package metadata
+        run: ./scripts/check-python-package.sh
+
+      - name: Publish sapient-py
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          packages-dir: python/sapient-py/dist/

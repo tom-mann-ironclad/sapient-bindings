@@ -1,0 +1,72 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+      - master
+
+jobs:
+  rust:
+    name: Rust
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt
+
+      - name: Install protoc
+        run: sudo apt-get update && sudo apt-get install --yes protobuf-compiler
+
+      - name: Verify generated bindings are up to date
+        run: |
+          ./scripts/regenerate-bindings.sh
+          git diff --exit-code
+
+      - name: Run Rust tests
+        run: cargo test
+
+      - name: Run Rust tests with all schema features
+        run: cargo test -p sapient-rs --features v1_0,v2_0
+
+      - name: Check Rust package
+        run: cargo package -p sapient-rs --allow-dirty --offline --no-verify
+
+  python:
+    name: Python
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install protoc
+        run: sudo apt-get update && sudo apt-get install --yes protobuf-compiler
+
+      - name: Install Python packaging tools
+        run: python -m pip install --upgrade pip build twine protobuf
+
+      - name: Verify generated bindings are up to date
+        run: |
+          ./scripts/regenerate-bindings.sh
+          git diff --exit-code
+
+      - name: Compile Python sources
+        run: python -m compileall python/sapient-py/src
+
+      - name: Build Python package
+        run: ./scripts/build-python-package.sh
+
+      - name: Check Python package metadata
+        run: ./scripts/check-python-package.sh

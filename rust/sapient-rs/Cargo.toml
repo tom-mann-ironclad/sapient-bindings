@@ -1,0 +1,38 @@
+[package]
+name = "sapient-rs"
+version = "0.1.0"
+edition = "2024"
+description = "Rust bindings for the SAPIENT / BSI Flex 335 protobuf message schemas"
+license = "MIT OR Apache-2.0"
+authors = ["Tom Mann <tom.mann@ironclad-software.com>"]
+readme = "README.md"
+documentation = "https://docs.rs/sapient-rs"
+repository = "https://github.com/tom-mann-ironclad/sapient-bindings"
+keywords = ["sapient", "protobuf", "prost", "bindings", "bsi"]
+categories = ["encoding", "api-bindings"]
+include = [
+    "/Cargo.toml",
+    "/README.md",
+    "/LICENSE-MIT",
+    "/LICENSE-APACHE",
+    "/src/**",
+]
+
+[lib]
+doctest = false
+
+[features]
+default = ["v2_0"]
+v1_0 = []
+v2_0 = []
+
+[dependencies]
+bytes = { version = "1.11.1", features = ["serde"] }
+prost = "0.14.3"
+prost-types = "0.14.3"
+tokio = { version = "1.52.1", features = ["full"] }
+ulid = "1.2.1"
+uuid = "1.18.1"
+
+[dev-dependencies]
+tokio = { version = "1.52.1", features = ["full"] }

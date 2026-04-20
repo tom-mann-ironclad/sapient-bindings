@@ -1,0 +1,3 @@
+[workspace]
+members = ["rust/sapient-rs"]
+resolver = "2"

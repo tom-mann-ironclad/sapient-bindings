@@ -1,0 +1,42 @@
+[build-system]
+requires = ["setuptools>=69", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "sapient-py"
+version = "0.1.0"
+description = "Python protobuf bindings and framing helpers for SAPIENT / BSI Flex 335"
+readme = "README.md"
+license = "MIT OR Apache-2.0"
+license-files = ["LICENSE-MIT", "LICENSE-APACHE"]
+authors = [
+    { name = "Tom Mann", email = "tom.mann@ironclad-software.com" },
+]
+requires-python = ">=3.10"
+dependencies = [
+    "protobuf>=5.28.0,<6",
+]
+keywords = ["sapient", "protobuf", "bsi", "bindings"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Software Development :: Libraries",
+]
+
+[project.urls]
+Repository = "https://github.com/tom-mann-ironclad/sapient-bindings"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+sapient_py = ["py.typed"]
