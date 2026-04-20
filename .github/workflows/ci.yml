@@ -26,7 +26,7 @@ jobs:
 
       - name: Verify generated bindings are up to date
         run: |
-          ./scripts/regenerate-bindings.sh
+          ./scripts/regenerate-rust-bindings.sh
           git diff --exit-code
 
       - name: Run Rust tests
@@ -59,7 +59,7 @@ jobs:
 
       - name: Verify generated bindings are up to date
         run: |
-          ./scripts/regenerate-bindings.sh
+          ./scripts/regenerate-python-bindings.sh
           git diff --exit-code
 
       - name: Compile Python sources

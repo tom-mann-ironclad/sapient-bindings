@@ -4,6 +4,7 @@
 /python/sapient-py/build
 /python/sapient-py/dist
 /python/sapient-py/*.egg-info
+/python/sapient-py/src/*.egg-info
 /python/sapient-py/.pytest_cache
 /python/sapient-py/.mypy_cache
 /python/sapient-py/**/__pycache__/

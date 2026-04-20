@@ -44,8 +44,7 @@ For language-specific regeneration, use:
 ./scripts/regenerate-python-bindings.sh
 ```
 
-The Rust regeneration helper uses Cargo offline mode and expects `prost-build`
-to be available in the local Cargo cache.
+The Rust regeneration helper resolves `prost-build` dynamically when needed.
 
 ## Package Checks
 
@@ -72,7 +71,7 @@ be installed in the active environment.
 
 GitHub Actions workflows live under `.github/workflows`:
 
-- `ci.yml` runs regeneration checks, Rust tests, Rust packaging, Python source compilation, Python build, and `twine check`
+- `ci.yml` runs language-specific regeneration checks, Rust tests, Rust packaging, Python source compilation, Python build, and `twine check`
 - `release.yml` publishes:
   - `sapient-rs` on tags matching `rust-sapient-rs-v*`
   - `sapient-py` on tags matching `python-sapient-py-v*`

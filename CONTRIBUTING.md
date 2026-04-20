@@ -20,9 +20,7 @@ That script:
 - regenerates Rust bindings into `rust/sapient-rs/src/generated/`
 - regenerates Python bindings into `python/sapient-py/src/sapient_msg/`
 
-The Rust regeneration script uses Cargo offline mode. If `prost-build` is not
-already available in your local Cargo cache, run it once in an environment with
-network access or prefetch the dependency before working offline.
+The Rust regeneration script resolves `prost-build` dynamically when needed.
 
 ## Verification
 
@@ -43,7 +41,7 @@ be installed in the active environment.
 
 GitHub Actions workflows are defined in `.github/workflows`:
 
-- `ci.yml` validates regeneration, Rust, and Python packaging on pushes and pull requests
+- `ci.yml` validates language-specific regeneration, Rust, and Python packaging on pushes and pull requests
 - `release.yml` publishes tagged releases
 
 Manual releases via `workflow_dispatch` take:

@@ -103,6 +103,6 @@ fn stage_local_protos(source_dir: &Path, staged_dir: &Path) -> Result<(), Box<dy
 EOF
 
 echo "Regenerating checked-in Rust protobuf bindings..."
-cargo run --quiet --offline --manifest-path "$tmp_dir/Cargo.toml" -- "$repo_root"
+cargo run --quiet --manifest-path "$tmp_dir/Cargo.toml" -- "$repo_root"
 cargo fmt --manifest-path "$crate_root/Cargo.toml" -- "$crate_root/src/generated/"*.rs
 echo "Rust bindings regenerated in $crate_root/src/generated"
