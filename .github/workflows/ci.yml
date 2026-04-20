@@ -21,8 +21,10 @@ jobs:
         with:
           components: rustfmt
 
-      - name: Install protoc
-        run: sudo apt-get update && sudo apt-get install --yes protobuf-compiler
+      - name: Set up protoc
+        uses: arduino/setup-protoc@v3
+        with:
+          version: "28.0"
 
       - name: Verify generated bindings are up to date
         run: |
@@ -51,8 +53,10 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Install protoc
-        run: sudo apt-get update && sudo apt-get install --yes protobuf-compiler
+      - name: Set up protoc
+        uses: arduino/setup-protoc@v3
+        with:
+          version: "28.0"
 
       - name: Install Python packaging tools
         run: python -m pip install --upgrade pip build twine protobuf

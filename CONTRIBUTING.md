@@ -20,6 +20,10 @@ That script:
 - regenerates Rust bindings into `rust/sapient-rs/src/generated/`
 - regenerates Python bindings into `python/sapient-py/src/sapient_msg/`
 
+Generated outputs, especially the Python `*_pb2.py` files, are sensitive to the
+exact `protoc` version. CI is pinned to `protoc 28.0`, so regeneration should
+use the same version when updating checked-in generated files.
+
 The Rust regeneration script resolves `prost-build` dynamically when needed.
 
 ## Verification
