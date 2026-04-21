@@ -10,11 +10,11 @@
         "projectUniqueName": "/home/dev001/Repositories/sapient-rs/csharp/sapient-csharp.Tests/Sapient.Bindings.Tests.csproj",
         "projectName": "Sapient.Bindings.Tests",
         "projectPath": "/home/dev001/Repositories/sapient-rs/csharp/sapient-csharp.Tests/Sapient.Bindings.Tests.csproj",
-        "packagesPath": "/home/dev001/Repositories/sapient-rs/target/dotnet-home/.nuget/packages/",
+        "packagesPath": "/home/dev001/.nuget/packages/",
         "outputPath": "/home/dev001/Repositories/sapient-rs/csharp/sapient-csharp.Tests/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "/home/dev001/Repositories/sapient-rs/target/dotnet-home/.nuget/NuGet/NuGet.Config"
+          "/home/dev001/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
@@ -75,16 +75,6 @@
           ],
           "assetTargetFallback": true,
           "warn": true,
-          "downloadDependencies": [
-            {
-              "name": "Microsoft.AspNetCore.App.Ref",
-              "version": "[8.0.26, 8.0.26]"
-            },
-            {
-              "name": "Microsoft.NETCore.App.Ref",
-              "version": "[8.0.26, 8.0.26]"
-            }
-          ],
           "frameworkReferences": {
             "Microsoft.NETCore.App": {
               "privateAssets": "all"
@@ -100,11 +90,11 @@
         "projectUniqueName": "/home/dev001/Repositories/sapient-rs/csharp/sapient-csharp/Sapient.Bindings.csproj",
         "projectName": "Sapient.Bindings",
         "projectPath": "/home/dev001/Repositories/sapient-rs/csharp/sapient-csharp/Sapient.Bindings.csproj",
-        "packagesPath": "/home/dev001/Repositories/sapient-rs/target/dotnet-home/.nuget/packages/",
+        "packagesPath": "/home/dev001/.nuget/packages/",
         "outputPath": "/home/dev001/Repositories/sapient-rs/csharp/sapient-csharp/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "/home/dev001/Repositories/sapient-rs/target/dotnet-home/.nuget/NuGet/NuGet.Config"
+          "/home/dev001/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "netstandard2.0"

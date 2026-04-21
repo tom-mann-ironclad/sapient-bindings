@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using Google.Protobuf;
 using Sapient.Bindings;
 using Sapient.Bindings.BsiFlex335.V2_0;
 using Xunit;
@@ -17,7 +18,7 @@ public sealed class SapientFramingTests
         byte[] frame = SapientFraming.EncodeFrame(message);
 
         Assert.Equal(payload.Length + 4, frame.Length);
-        Assert.Equal(payload.Length, BitConverter.ToUInt32(frame, 0));
+        Assert.Equal(payload.Length, checked((int)BitConverter.ToUInt32(frame, 0)));
         Assert.Equal(payload, frame[4..]);
     }
 
