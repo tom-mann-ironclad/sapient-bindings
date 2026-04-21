@@ -11,6 +11,7 @@ on:
         options:
           - rust
           - python
+          - csharp
       version:
         description: "Package version to publish, for example 0.1.0"
         required: true
@@ -19,6 +20,7 @@ on:
     tags:
       - "rust-sapient-rs-v*"
       - "python-sapient-py-v*"
+      - "csharp-sapient-bindings-v*"
 
 jobs:
   publish-rust:
@@ -140,3 +142,77 @@ jobs:
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
           packages-dir: python/sapient-py/dist/
+
+  publish-csharp:
+    name: Publish C# package
+    if: startsWith(github.ref, 'refs/tags/csharp-sapient-bindings-v') || (github.event_name == 'workflow_dispatch' && inputs.package == 'csharp')
+    runs-on: ubuntu-latest
+    concurrency:
+      group: release-csharp-${{ github.ref_name || github.run_id }}
+      cancel-in-progress: false
+    environment:
+      name: Nuget
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "8.0.x"
+
+      - name: Set up protoc
+        uses: arduino/setup-protoc@v3
+        with:
+          version: "28.0"
+
+      - name: Verify generated bindings are up to date
+        run: |
+          ./scripts/regenerate-csharp-bindings.sh
+          git diff --exit-code
+
+      - name: Verify C# release version
+        shell: bash
+        run: |
+          manifest_version="$(sed -n 's/.*<Version>\(.*\)<\/Version>.*/\1/p' csharp/sapient-csharp/Sapient.Bindings.csproj | head -n1)"
+          if [ -z "$manifest_version" ]; then
+            echo "Failed to read C# package version from Sapient.Bindings.csproj" >&2
+            exit 1
+          fi
+
+          if [ "${GITHUB_EVENT_NAME}" = "push" ]; then
+            expected_version="${GITHUB_REF_NAME#csharp-sapient-bindings-v}"
+          else
+            expected_version="${{ inputs.version }}"
+          fi
+
+          if [ "$manifest_version" != "$expected_version" ]; then
+            echo "C# package version mismatch: manifest=$manifest_version expected=$expected_version" >&2
+            exit 1
+          fi
+
+      - name: Build C# package
+        run: dotnet build csharp/sapient-csharp/Sapient.Bindings.csproj --configuration Release
+
+      - name: Run C# tests
+        run: dotnet test csharp/sapient-csharp.Tests/Sapient.Bindings.Tests.csproj --configuration Release
+
+      - name: Pack C# package
+        run: dotnet pack csharp/sapient-csharp/Sapient.Bindings.csproj --configuration Release --no-build
+
+      - name: Publish Sapient.Bindings
+        id: nuget-login
+        uses: NuGet/login@v1
+        with:
+          user: ${{ vars.NUGET_USER }}
+
+      - name: Push Sapient.Bindings
+        run: |
+          dotnet nuget push "csharp/sapient-csharp/bin/Release/*.nupkg" \
+            --api-key "${{ steps.nuget-login.outputs.NUGET_API_KEY }}" \
+            --source "https://api.nuget.org/v3/index.json" \
+            --skip-duplicate

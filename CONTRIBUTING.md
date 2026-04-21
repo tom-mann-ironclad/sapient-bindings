@@ -54,25 +54,32 @@ GitHub Actions workflows are defined in `.github/workflows`:
 
 Manual releases via `workflow_dispatch` take:
 
-- `package`: `rust` or `python`
+- `package`: `rust`, `python`, or `csharp`
 - `version`: the package version to publish
 
 Release tag conventions:
 
 - Rust: `rust-sapient-rs-vX.Y.Z`
 - Python: `python-sapient-py-vX.Y.Z`
+- C#: `csharp-sapient-bindings-vX.Y.Z`
 
 Release protections:
 
 - Rust publishing is gated by the `crates-io` environment
 - Python publishing is gated by the `pypi` environment
+- C# publishing is gated by the `Nuget` environment
 - the tag version, or manual `version` input, must match the package manifest version exactly
 
 Repository secrets:
 
 - `CARGO_REGISTRY_TOKEN` for crates.io publishing
 
+Repository or environment variables:
+
+- `NUGET_USER` for NuGet trusted publishing. This should be the NuGet account username, not an email address.
+
 The Python publish job uses PyPI trusted publishing via GitHub OIDC.
+The C# publish job uses NuGet trusted publishing via GitHub OIDC.
 
 If you prefer package-local commands, the Rust crate lives in:
 

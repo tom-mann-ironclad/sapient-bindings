@@ -91,6 +91,7 @@ GitHub Actions workflows live under `.github/workflows`:
 - `release.yml` publishes:
   - `sapient-rs` on tags matching `rust-sapient-rs-v*`
   - `sapient-py` on tags matching `python-sapient-py-v*`
+  - `Sapient.Bindings` on tags matching `csharp-sapient-bindings-v*`
   - one package at a time manually via `workflow_dispatch`
 
 Release safeguards:
@@ -98,7 +99,10 @@ Release safeguards:
 - publish jobs require approved GitHub environments:
   - `crates-io` for Rust
   - `pypi` for Python
+  - `Nuget` for C#
 - tag or manual-input versions must match the package manifest version exactly
+- C# publishing uses NuGet trusted publishing and requires a `NUGET_USER`
+  GitHub variable containing the NuGet account username
 
 ## Licensing
 
