@@ -19,6 +19,7 @@ That script:
 - stages the repository `.proto` files into temporary workspaces
 - regenerates Rust bindings into `rust/sapient-rs/src/generated/`
 - regenerates Python bindings into `python/sapient-py/src/sapient_msg/`
+- regenerates C# bindings into `csharp/sapient-csharp/Generated/`
 
 Generated outputs, especially the Python `*_pb2.py` files, are sensitive to the
 exact `protoc` version. CI is pinned to `protoc 28.0`, so regeneration should
@@ -36,6 +37,9 @@ cargo test -p sapient-rs --features v1_0,v2_0
 python3 -m compileall python/sapient-py/src
 ./scripts/build-python-package.sh
 ./scripts/check-python-package.sh
+dotnet build csharp/sapient-csharp/Sapient.Bindings.csproj
+dotnet test csharp/sapient-csharp.Tests/Sapient.Bindings.Tests.csproj
+dotnet pack csharp/sapient-csharp/Sapient.Bindings.csproj --configuration Release
 ```
 
 The Python packaging helpers expect `python -m build` and `python -m twine` to
@@ -45,7 +49,7 @@ be installed in the active environment.
 
 GitHub Actions workflows are defined in `.github/workflows`:
 
-- `ci.yml` validates language-specific regeneration, Rust, and Python packaging on pushes and pull requests
+- `ci.yml` validates language-specific regeneration, Rust, Python packaging, and C# packaging on pushes and pull requests
 - `release.yml` publishes tagged releases
 
 Manual releases via `workflow_dispatch` take:
@@ -84,4 +88,13 @@ and the Python package lives in:
 cd python/sapient-py
 python3 -m build
 python3 -m twine check dist/*
+```
+
+and the C# package lives in:
+
+```bash
+cd csharp/sapient-csharp
+dotnet build --configuration Release
+dotnet test ../sapient-csharp.Tests/Sapient.Bindings.Tests.csproj --configuration Release
+dotnet pack --configuration Release --no-build
 ```

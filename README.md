@@ -17,6 +17,7 @@ The repository copy of the schema source lives under `proto/`.
 
 - Rust crate: `rust/sapient-rs`
 - Python package: `python/sapient-py`
+- C# package: `csharp/sapient-csharp`
 
 ## Rust Crate
 
@@ -28,6 +29,12 @@ It ships pre-generated Rust bindings plus Rust framing helpers.
 The Python package lives in `python/sapient-py` and is intended for PyPI
 publication as `sapient-py`. It ships generated Python protobuf modules plus
 Python framing helpers.
+
+## C# Package
+
+The C# package lives in `csharp/sapient-csharp` and is intended for NuGet
+publication as `Sapient.Bindings`. It ships generated C# protobuf sources plus
+C# framing helpers.
 
 ## Maintenance
 
@@ -42,6 +49,7 @@ For language-specific regeneration, use:
 ```bash
 ./scripts/regenerate-rust-bindings.sh
 ./scripts/regenerate-python-bindings.sh
+./scripts/regenerate-csharp-bindings.sh
 ```
 
 The Rust regeneration helper resolves `prost-build` dynamically when needed.
@@ -67,11 +75,19 @@ python3 -m compileall python/sapient-py/src
 The Python packaging scripts expect `python -m build` and `python -m twine` to
 be installed in the active environment.
 
+C#:
+
+```bash
+dotnet build csharp/sapient-csharp/Sapient.Bindings.csproj
+dotnet test csharp/sapient-csharp.Tests/Sapient.Bindings.Tests.csproj
+dotnet pack csharp/sapient-csharp/Sapient.Bindings.csproj --configuration Release
+```
+
 ## CI/CD
 
 GitHub Actions workflows live under `.github/workflows`:
 
-- `ci.yml` runs language-specific regeneration checks, Rust tests, Rust packaging, Python source compilation, Python build, and `twine check`
+- `ci.yml` runs language-specific regeneration checks, Rust tests, Rust packaging, Python source compilation, Python build, `twine check`, C# build, and C# pack
 - `release.yml` publishes:
   - `sapient-rs` on tags matching `rust-sapient-rs-v*`
   - `sapient-py` on tags matching `python-sapient-py-v*`
@@ -86,7 +102,7 @@ Release safeguards:
 
 ## Licensing
 
-The Rust and Python packages are licensed under either of:
+The Rust, Python, and C# packages are licensed under either of:
 
 - MIT
 - Apache-2.0

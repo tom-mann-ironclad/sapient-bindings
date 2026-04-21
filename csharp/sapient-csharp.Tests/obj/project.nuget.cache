@@ -1,0 +1,42 @@
+{
+  "version": 2,
+  "dgSpecHash": "JAb/MlGaxvc=",
+  "success": false,
+  "projectFilePath": "/home/dev001/Repositories/sapient-rs/csharp/sapient-csharp.Tests/Sapient.Bindings.Tests.csproj",
+  "expectedPackageFiles": [],
+  "logs": [
+    {
+      "code": "NU1301",
+      "level": "Error",
+      "message": "Unable to load the service index for source https://api.nuget.org/v3/index.json.\n  Permission denied (api.nuget.org:443)\n  Permission denied",
+      "projectPath": "/home/dev001/Repositories/sapient-rs/csharp/sapient-csharp.Tests/Sapient.Bindings.Tests.csproj",
+      "filePath": "/home/dev001/Repositories/sapient-rs/csharp/sapient-csharp.Tests/Sapient.Bindings.Tests.csproj",
+      "targetGraphs": []
+    },
+    {
+      "code": "NU1301",
+      "level": "Error",
+      "message": "Unable to load the service index for source https://api.nuget.org/v3/index.json.\n  Permission denied (api.nuget.org:443)\n  Permission denied",
+      "projectPath": "/home/dev001/Repositories/sapient-rs/csharp/sapient-csharp.Tests/Sapient.Bindings.Tests.csproj",
+      "filePath": "/home/dev001/Repositories/sapient-rs/csharp/sapient-csharp.Tests/Sapient.Bindings.Tests.csproj",
+      "targetGraphs": []
+    },
+    {
+      "code": "NU1301",
+      "level": "Error",
+      "message": "Unable to load the service index for source https://api.nuget.org/v3/index.json.\n  Permission denied (api.nuget.org:443)\n  Permission denied",
+      "projectPath": "/home/dev001/Repositories/sapient-rs/csharp/sapient-csharp.Tests/Sapient.Bindings.Tests.csproj",
+      "filePath": "/home/dev001/Repositories/sapient-rs/csharp/sapient-csharp.Tests/Sapient.Bindings.Tests.csproj",
+      "targetGraphs": []
+    },
+    {
+      "code": "NU1900",
+      "level": "Warning",
+      "message": "Error occurred while getting package vulnerability data: Unable to load the service index for source https://api.nuget.org/v3/index.json.",
+      "projectPath": "/home/dev001/Repositories/sapient-rs/csharp/sapient-csharp.Tests/Sapient.Bindings.Tests.csproj",
+      "warningLevel": 1,
+      "filePath": "/home/dev001/Repositories/sapient-rs/csharp/sapient-csharp.Tests/Sapient.Bindings.Tests.csproj",
+      "targetGraphs": []
+    }
+  ]
+}

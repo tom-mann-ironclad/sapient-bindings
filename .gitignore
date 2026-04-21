@@ -9,3 +9,5 @@
 /python/sapient-py/.mypy_cache
 /python/sapient-py/**/__pycache__/
 /python/sapient-py/**/*.pyc
+/csharp/sapient-csharp/bin
+/csharp/sapient-csharp/obj

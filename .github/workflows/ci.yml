@@ -74,3 +74,35 @@ jobs:
 
       - name: Check Python package metadata
         run: ./scripts/check-python-package.sh
+
+  csharp:
+    name: C#
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "8.0.x"
+
+      - name: Set up protoc
+        uses: arduino/setup-protoc@v3
+        with:
+          version: "28.0"
+
+      - name: Verify generated bindings are up to date
+        run: |
+          ./scripts/regenerate-csharp-bindings.sh
+          git diff --exit-code
+
+      - name: Build C# package
+        run: dotnet build csharp/sapient-csharp/Sapient.Bindings.csproj --configuration Release
+
+      - name: Run C# tests
+        run: dotnet test csharp/sapient-csharp.Tests/Sapient.Bindings.Tests.csproj --configuration Release
+
+      - name: Pack C# package
+        run: dotnet pack csharp/sapient-csharp/Sapient.Bindings.csproj --configuration Release --no-build
