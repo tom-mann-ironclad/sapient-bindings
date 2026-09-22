@@ -80,6 +80,11 @@ fn main() -> Result<(), Box<dyn Error>> {
 
     let mut config = prost_build::Config::new();
     config.out_dir(&generated_dir);
+    // Persist the compiled FileDescriptorSet alongside the generated Rust
+    // code so downstream crates (e.g. a conformance test harness) can parse
+    // canonical protobuf JSON via `prost-reflect` without needing their own
+    // copy of the `.proto` sources.
+    config.file_descriptor_set_path(generated_dir.join("sapient_msg.file_descriptor_set.bin"));
     config.compile_protos(&root_protos, &[include_root])?;
 
     Ok(())
