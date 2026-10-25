@@ -19,6 +19,7 @@ The repository copy of the schema source lives under `proto/`.
 - Python package: `python/sapient-py`
 - C# package: `csharp/sapient-csharp`
 - Go module: `go/sapient`
+- Java package: `java/sapient-java`
 
 ## Rust Crate
 
@@ -48,6 +49,12 @@ Go generation requires `protoc-gen-go`:
 go install google.golang.org/protobuf/cmd/protoc-gen-go@v1.36.0
 ```
 
+## Java Package
+
+The Java package lives in `java/sapient-java` and is intended for Maven Central
+publication as `io.github.tom-mann-ironclad:sapient-bindings`. It ships
+generated Java protobuf sources plus Java framing helpers, targeting Java 8+.
+
 ## Maintenance
 
 Maintainers can regenerate all checked-in bindings with:
@@ -63,6 +70,7 @@ For language-specific regeneration, use:
 ./scripts/regenerate-python-bindings.sh
 ./scripts/regenerate-csharp-bindings.sh
 ./scripts/regenerate-go-bindings.sh
+./scripts/regenerate-java-bindings.sh
 ```
 
 The Rust regeneration helper resolves `prost-build` dynamically when needed.
@@ -103,15 +111,23 @@ cd go/sapient
 go test ./...
 ```
 
+Java:
+
+```bash
+cd java/sapient-java
+mvn verify
+```
+
 ## CI/CD
 
 GitHub Actions workflows live under `.github/workflows`:
 
-- `ci.yml` runs language-specific regeneration checks, Rust tests, Rust packaging, Python source compilation, Python build, `twine check`, C# build, C# pack, and Go tests
+- `ci.yml` runs language-specific regeneration checks, Rust tests, Rust packaging, Python source compilation, Python build, `twine check`, C# build, C# pack, Go tests, and Java build/test/package
 - `release.yml` publishes:
   - `sapient-rs` on tags matching `rust-sapient-rs-v*`
   - `sapient-py` on tags matching `python-sapient-py-v*`
   - `Sapient.Bindings` on tags matching `csharp-sapient-bindings-v*`
+  - `io.github.tom-mann-ironclad:sapient-bindings` on tags matching `java-sapient-bindings-v*`
   - one package at a time manually via `workflow_dispatch`
 
 Release safeguards:
@@ -120,13 +136,16 @@ Release safeguards:
   - `crates-io` for Rust
   - `pypi` for Python
   - `Nuget` for C#
+  - `maven-central` for Java
 - tag or manual-input versions must match the package manifest version exactly
 - C# publishing uses NuGet trusted publishing and requires a `NUGET_USER`
   GitHub variable containing the NuGet account username
+- Java publishing uses a Maven Central Portal user token and a GPG signing key;
+  see `CONTRIBUTING.md` for the required secrets
 
 ## Licensing
 
-The Rust, Python, and C# packages are licensed under either of:
+The Rust, Python, C#, and Java packages are licensed under either of:
 
 - MIT
 - Apache-2.0

@@ -136,3 +136,33 @@ jobs:
       - name: Run Go tests
         run: go test ./...
         working-directory: go/sapient
+
+  java:
+    name: Java
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+          cache: maven
+
+      - name: Set up protoc
+        uses: arduino/setup-protoc@v3
+        with:
+          version: "28.0"
+
+      - name: Verify generated bindings are up to date
+        run: |
+          ./scripts/regenerate-java-bindings.sh
+          git diff --exit-code
+          test -z "$(git status --porcelain java/sapient-java/src/generated)"
+
+      - name: Build, test, and package Java bindings
+        run: mvn --batch-mode --no-transfer-progress verify
+        working-directory: java/sapient-java

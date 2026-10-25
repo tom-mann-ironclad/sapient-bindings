@@ -12,6 +12,7 @@ on:
           - rust
           - python
           - csharp
+          - java
       version:
         description: "Package version to publish, for example 0.1.0"
         required: true
@@ -21,6 +22,7 @@ on:
       - "rust-sapient-rs-v*"
       - "python-sapient-py-v*"
       - "csharp-sapient-bindings-v*"
+      - "java-sapient-bindings-v*"
 
 jobs:
   publish-rust:
@@ -216,3 +218,71 @@ jobs:
             --api-key "${{ steps.nuget-login.outputs.NUGET_API_KEY }}" \
             --source "https://api.nuget.org/v3/index.json" \
             --skip-duplicate
+
+  publish-java:
+    name: Publish Java package
+    if: startsWith(github.ref, 'refs/tags/java-sapient-bindings-v') || (github.event_name == 'workflow_dispatch' && inputs.package == 'java')
+    runs-on: ubuntu-latest
+    concurrency:
+      group: release-java-${{ github.ref_name || github.run_id }}
+      cancel-in-progress: false
+    environment:
+      name: maven-central
+    permissions:
+      contents: read
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+          cache: maven
+          server-id: central
+          server-username: MAVEN_CENTRAL_USERNAME
+          server-password: MAVEN_CENTRAL_PASSWORD
+          gpg-private-key: ${{ secrets.MAVEN_GPG_PRIVATE_KEY }}
+          gpg-passphrase: MAVEN_GPG_PASSPHRASE
+
+      - name: Set up protoc
+        uses: arduino/setup-protoc@v3
+        with:
+          version: "28.0"
+
+      - name: Verify generated bindings are up to date
+        run: |
+          ./scripts/regenerate-java-bindings.sh
+          git diff --exit-code
+          test -z "$(git status --porcelain java/sapient-java/src/generated)"
+
+      - name: Verify Java release version
+        shell: bash
+        working-directory: java/sapient-java
+        run: |
+          manifest_version="$(mvn --batch-mode --quiet help:evaluate -Dexpression=project.version -DforceStdout)"
+          if [ -z "$manifest_version" ]; then
+            echo "Failed to read Java package version from pom.xml" >&2
+            exit 1
+          fi
+
+          if [ "${GITHUB_EVENT_NAME}" = "push" ]; then
+            expected_version="${GITHUB_REF_NAME#java-sapient-bindings-v}"
+          else
+            expected_version="${{ inputs.version }}"
+          fi
+
+          if [ "$manifest_version" != "$expected_version" ]; then
+            echo "Java package version mismatch: manifest=$manifest_version expected=$expected_version" >&2
+            exit 1
+          fi
+
+      - name: Publish sapient-bindings to Maven Central
+        working-directory: java/sapient-java
+        env:
+          MAVEN_CENTRAL_USERNAME: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
+          MAVEN_CENTRAL_PASSWORD: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}
+          MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
+        run: mvn --batch-mode --no-transfer-progress -Prelease deploy
