@@ -262,7 +262,7 @@ jobs:
         shell: bash
         working-directory: java/sapient-java
         run: |
-          manifest_version="$(mvn --batch-mode --quiet help:evaluate -Dexpression=project.version -DforceStdout)"
+          manifest_version="$(./mvnw --batch-mode --quiet help:evaluate -Dexpression=project.version -DforceStdout)"
           if [ -z "$manifest_version" ]; then
             echo "Failed to read Java package version from pom.xml" >&2
             exit 1
@@ -285,4 +285,4 @@ jobs:
           MAVEN_CENTRAL_USERNAME: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
           MAVEN_CENTRAL_PASSWORD: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}
           MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
-        run: mvn --batch-mode --no-transfer-progress -Prelease deploy
+        run: ./mvnw --batch-mode --no-transfer-progress -Prelease deploy

@@ -115,7 +115,7 @@ Java:
 
 ```bash
 cd java/sapient-java
-mvn verify
+./mvnw verify
 ```
 
 ## CI/CD

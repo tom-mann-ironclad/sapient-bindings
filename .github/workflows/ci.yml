@@ -164,5 +164,5 @@ jobs:
           test -z "$(git status --porcelain java/sapient-java/src/generated)"
 
       - name: Build, test, and package Java bindings
-        run: mvn --batch-mode --no-transfer-progress verify
+        run: ./mvnw --batch-mode --no-transfer-progress verify
         working-directory: java/sapient-java

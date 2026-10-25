@@ -48,7 +48,7 @@ dotnet build csharp/sapient-csharp/Sapient.Bindings.csproj
 dotnet test csharp/sapient-csharp.Tests/Sapient.Bindings.Tests.csproj
 dotnet pack csharp/sapient-csharp/Sapient.Bindings.csproj --configuration Release
 (cd go/sapient && go test ./...)
-(cd java/sapient-java && mvn verify)
+(cd java/sapient-java && ./mvnw verify)
 ```
 
 The Python packaging helpers expect `python -m build` and `python -m twine` to
@@ -130,5 +130,5 @@ and the Java package lives in:
 
 ```bash
 cd java/sapient-java
-mvn verify
+./mvnw verify
 ```
