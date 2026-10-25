@@ -10,6 +10,7 @@
     <Description>C# protobuf bindings and framing helpers for SAPIENT / BSI Flex 335</Description>
     <PackageLicenseExpression>MIT OR Apache-2.0</PackageLicenseExpression>
     <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageProjectUrl>https://sapient-helpdesk.com/bindings/</PackageProjectUrl>
     <RepositoryUrl>https://github.com/tom-mann-ironclad/sapient-bindings</RepositoryUrl>
     <PackageTags>sapient;protobuf;bsi;bindings</PackageTags>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>

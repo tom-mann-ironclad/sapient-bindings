@@ -30,6 +30,7 @@ classifiers = [
 ]
 
 [project.urls]
+Homepage = "https://sapient-helpdesk.com/bindings/"
 Repository = "https://github.com/tom-mann-ironclad/sapient-bindings"
 
 [tool.setuptools]

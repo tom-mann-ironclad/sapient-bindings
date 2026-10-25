@@ -6,6 +6,7 @@ description = "Rust bindings for the SAPIENT / BSI Flex 335 protobuf message sch
 license = "MIT OR Apache-2.0"
 authors = ["Tom Mann <tom.mann@ironclad-software.com>"]
 readme = "README.md"
+homepage = "https://sapient-helpdesk.com/bindings/"
 documentation = "https://docs.rs/sapient-rs"
 repository = "https://github.com/tom-mann-ironclad/sapient-bindings"
 keywords = ["sapient", "protobuf", "prost", "bindings", "bsi"]
