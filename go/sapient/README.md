@@ -5,6 +5,16 @@ Go protobuf bindings and framing helpers for SAPIENT / BSI Flex 335.
 This module ships checked-in Go sources generated from the SAPIENT schema
 source and a small framing helper layer for stream transport.
 
+## Install
+
+```bash
+go get github.com/tom-mann-ironclad/sapient-bindings/go/sapient/...
+```
+
+The `/...` matters: the module root has no package of its own, so a bare
+`go get` of the module path skips the protobuf dependency and the first build
+fails with `missing go.sum entry`.
+
 ## Usage
 
 ```go

@@ -52,7 +52,7 @@ fn main() {
         destination_id: None,
         content: Some(Content::Registration(Registration {
             node_definition: Vec::new(),
-            icd_version: Some("BSI_Flex_335_v2.0".to_string()),
+            icd_version: Some("BSI Flex 335 v2.0".to_string()),
             name: Some("Example Node".to_string()),
             short_name: Some("example".to_string()),
             capabilities: Vec::new(),
