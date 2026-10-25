@@ -20,12 +20,18 @@ That script:
 - regenerates Rust bindings into `rust/sapient-rs/src/generated/`
 - regenerates Python bindings into `python/sapient-py/src/sapient_msg/`
 - regenerates C# bindings into `csharp/sapient-csharp/Generated/`
+- regenerates Go bindings into `go/sapient/generated/`
 
 Generated outputs, especially the Python `*_pb2.py` files, are sensitive to the
 exact `protoc` version. CI is pinned to `protoc 28.0`, so regeneration should
 use the same version when updating checked-in generated files.
 
 The Rust regeneration script resolves `prost-build` dynamically when needed.
+The Go regeneration script requires `protoc-gen-go`:
+
+```bash
+go install google.golang.org/protobuf/cmd/protoc-gen-go@v1.36.0
+```
 
 ## Verification
 
@@ -40,6 +46,7 @@ python3 -m compileall python/sapient-py/src
 dotnet build csharp/sapient-csharp/Sapient.Bindings.csproj
 dotnet test csharp/sapient-csharp.Tests/Sapient.Bindings.Tests.csproj
 dotnet pack csharp/sapient-csharp/Sapient.Bindings.csproj --configuration Release
+(cd go/sapient && go test ./...)
 ```
 
 The Python packaging helpers expect `python -m build` and `python -m twine` to
@@ -49,7 +56,7 @@ be installed in the active environment.
 
 GitHub Actions workflows are defined in `.github/workflows`:
 
-- `ci.yml` validates language-specific regeneration, Rust, Python packaging, and C# packaging on pushes and pull requests
+- `ci.yml` validates language-specific regeneration, Rust, Python packaging, C# packaging, and Go tests on pushes and pull requests
 - `release.yml` publishes tagged releases
 
 Manual releases via `workflow_dispatch` take:

@@ -18,6 +18,7 @@ The repository copy of the schema source lives under `proto/`.
 - Rust crate: `rust/sapient-rs`
 - Python package: `python/sapient-py`
 - C# package: `csharp/sapient-csharp`
+- Go module: `go/sapient`
 
 ## Rust Crate
 
@@ -36,6 +37,17 @@ The C# package lives in `csharp/sapient-csharp` and is intended for NuGet
 publication as `Sapient.Bindings`. It ships generated C# protobuf sources plus
 C# framing helpers.
 
+## Go Module
+
+The Go module lives in `go/sapient`. It ships generated Go protobuf sources plus
+Go framing helpers.
+
+Go generation requires `protoc-gen-go`:
+
+```bash
+go install google.golang.org/protobuf/cmd/protoc-gen-go@v1.36.0
+```
+
 ## Maintenance
 
 Maintainers can regenerate all checked-in bindings with:
@@ -50,6 +62,7 @@ For language-specific regeneration, use:
 ./scripts/regenerate-rust-bindings.sh
 ./scripts/regenerate-python-bindings.sh
 ./scripts/regenerate-csharp-bindings.sh
+./scripts/regenerate-go-bindings.sh
 ```
 
 The Rust regeneration helper resolves `prost-build` dynamically when needed.
@@ -83,11 +96,18 @@ dotnet test csharp/sapient-csharp.Tests/Sapient.Bindings.Tests.csproj
 dotnet pack csharp/sapient-csharp/Sapient.Bindings.csproj --configuration Release
 ```
 
+Go:
+
+```bash
+cd go/sapient
+go test ./...
+```
+
 ## CI/CD
 
 GitHub Actions workflows live under `.github/workflows`:
 
-- `ci.yml` runs language-specific regeneration checks, Rust tests, Rust packaging, Python source compilation, Python build, `twine check`, C# build, and C# pack
+- `ci.yml` runs language-specific regeneration checks, Rust tests, Rust packaging, Python source compilation, Python build, `twine check`, C# build, C# pack, and Go tests
 - `release.yml` publishes:
   - `sapient-rs` on tags matching `rust-sapient-rs-v*`
   - `sapient-py` on tags matching `python-sapient-py-v*`
